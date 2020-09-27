@@ -170,7 +170,7 @@ if __name__ == "__main__":
     # print(f"Theta Progress: {theta_prog} \n")
     # print(f"Theta: {theta} | Theta 0: {theta_not} \n")
 
-    # 2) With offset parameter
+    # 3) Perceptron for the following Training Set
     # Defines the Training Set
     x = np.array([[-1, 1],
                   [1, -1],
