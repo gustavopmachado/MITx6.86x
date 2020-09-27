@@ -54,7 +54,7 @@ def perceptron(x, y, theta=None, theta_not=None, **kwargs):
         x - Training set (numpy array: n x d)
         y - Training set label (numpy array: n x 1)
 
-    Optional:    
+    Optional:
         order - Ordering list that the algorithm will perform through (list, range or numpy array: n x 1)
 
     Returns (in this order):
@@ -114,8 +114,9 @@ def perceptron(x, y, theta=None, theta_not=None, **kwargs):
         print(f"Theta: {theta} | Theta 0: {theta_not}")
         print(f"History: {update_history} \n")
 
-        if update_history["x1"] == 1 and update_history["x2"] == 0 and update_history["x3"] == 2 and update_history["x4"] == 1 and update_history["x5"] == 0:
-            break
+        # Homework Part 2 Stop Criteria
+        # if update_history["x1"] == 1 and update_history["x2"] == 0 and update_history["x3"] == 2 and update_history["x4"] == 1 and update_history["x5"] == 0:
+        #   break
 
         # Check if no change in parameters was made in the run through
         if miss_classified == 0:
@@ -126,8 +127,8 @@ def perceptron(x, y, theta=None, theta_not=None, **kwargs):
 
 if __name__ == "__main__":
 
-    # 1) Without Offset parameter
-    #
+    # # 1) Without Offset parameter
+
     # # Defines the Training Set
     # x = np.array([[-1, -1],
     #               [1, 0],
@@ -149,16 +150,34 @@ if __name__ == "__main__":
     # print(f"Theta Progress: {theta_prog} \n")
     # print(f"Theta: {theta} | Theta 0: {theta_not} \n")
 
+    # # 2) With offset parameter
+    # # Defines the Training Set
+    # x = np.array([[-4, 2],
+    #               [-2, 1],
+    #               [-1, -1],
+    #               [2, 2],
+    #               [1, -2]])
+    # y = np.array([[1],
+    #               [1],
+    #               [-1],
+    #               [-1],
+    #               [-1]])
+
+    # # Runs the Perceptron
+    # theta, theta_not, theta_prog = perceptron(x, y)
+
+    # print(f"Training Set: {x} \n")
+    # print(f"Theta Progress: {theta_prog} \n")
+    # print(f"Theta: {theta} | Theta 0: {theta_not} \n")
+
     # 2) With offset parameter
     # Defines the Training Set
-    x = np.array([[-4, 2],
-                  [-2, 1],
-                  [-1, -1],
-                  [2, 2],
-                  [1, -2]])
+    x = np.array([[-1, 1],
+                  [1, -1],
+                  [1, 1],
+                  [2, 2]])
     y = np.array([[1],
                   [1],
-                  [-1],
                   [-1],
                   [-1]])
 
