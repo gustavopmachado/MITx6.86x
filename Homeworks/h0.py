@@ -39,7 +39,7 @@ def perceptron_step(theta, theta_not, x, y):
 
     if y*(np.dot(np.transpose(theta), x) + theta_not) <= 0:
         theta = theta + y*x
-        theta_not = theta_not + y
+        # theta_not = theta_not + y
 
         return theta, theta_not
 
@@ -170,19 +170,41 @@ if __name__ == "__main__":
     # print(f"Theta Progress: {theta_prog} \n")
     # print(f"Theta: {theta} | Theta 0: {theta_not} \n")
 
-    # 3) Perceptron for the following Training Set
+    # # 3) Perceptron for the following Training Set
+    # # Defines the Training Set
+    # x = np.array([[-1, 1],
+    #               [1, -1],
+    #               [1, 1],
+    #               [2, 2]])
+    # y = np.array([[1],
+    #               [1],
+    #               [-1],
+    #               [-1]])
+
+    # # Runs the Perceptron
+    # theta, theta_not, theta_prog = perceptron(x, y)
+
+    # print(f"Training Set: {x} \n")
+    # print(f"Theta Progress: {theta_prog} \n")
+    # print(f"Theta: {theta} | Theta 0: {theta_not} \n")
+
+    # 6) Perceptron Updates
     # Defines the Training Set
-    x = np.array([[-1, 1],
-                  [1, -1],
-                  [1, 1],
-                  [2, 2]])
+    x = np.array([[-1, 0, 0],
+                  [0, 1, 0],
+                  [0, 0, -1]])
     y = np.array([[1],
                   [1],
-                  [-1],
-                  [-1]])
+                  [1]])
+
+    # # Defines the ordering in which the Perceptron will go through the training set
+    # order = np.array([1, 2, 3]) - np.ones(x.shape[0]
+    #                                       ).astype(int)  # Starting at x(1)
+    order = np.array([2, 3, 1]) - np.ones(x.shape[0]
+                                          ).astype(int)  # Starting at x(2)
 
     # Runs the Perceptron
-    theta, theta_not, theta_prog = perceptron(x, y)
+    theta, theta_not, theta_prog = perceptron(x, y, order=order)
 
     print(f"Training Set: {x} \n")
     print(f"Theta Progress: {theta_prog} \n")
