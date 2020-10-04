@@ -182,7 +182,7 @@ def average_perceptron(feature_matrix, labels, T):
 
     # Perceptron Run
     counter = 0
-    for t in range(T):
+    for _ in range(T):
         for i in get_order(feature_matrix.shape[0]):
             # Perceptron update
             theta, theta_0 = perceptron_single_step_update(
@@ -229,8 +229,10 @@ def pegasos_single_step_update(
     real valued number with the value of theta_0 after the current updated has
     completed.
     """
-    # Your code here
-    raise NotImplementedError
+
+    if label*(np.dot(np.transpose(current_theta), feature_vector) + current_theta_0) <= 1:
+        return (1 - eta*L)*current_theta + eta*label*feature_vector, current_theta_0 + eta*label
+    return (1 - eta*L)*current_theta, current_theta_0
 # pragma: coderesponse end
 
 
@@ -264,8 +266,26 @@ def pegasos(feature_matrix, labels, T, L):
     number with the value of the theta_0, the offset classification
     parameter, found after T iterations through the feature matrix.
     """
-    # Your code here
-    raise NotImplementedError
+
+    # Initializes the parameters
+    theta = np.zeros([feature_matrix.shape[1]])
+    theta_0 = np.zeros([1])
+
+    # Pegasos Run
+    counter = 1
+    for t in range(T):
+        for i in get_order(feature_matrix.shape[0]):
+            # Decaying leearning rate
+            eta = 1/np.sqrt(counter)
+
+            # Perform the update
+            theta, theta_0 = pegasos_single_step_update(
+                feature_matrix[i], labels[i], L, eta, theta, theta_0)
+
+            # Updates the counter
+            counter += 1
+
+    return theta, theta_0
 # pragma: coderesponse end
 
 # Part II
