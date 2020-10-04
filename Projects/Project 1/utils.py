@@ -10,6 +10,7 @@ if sys.version_info[0] < 3:
 else:
     PYTHON3 = True
 
+
 def load_toy_data(path_toy_data):
     """
     Loads the 2D toy dataset as numpy arrays.
@@ -18,6 +19,7 @@ def load_toy_data(path_toy_data):
     """
     labels, xs, ys = np.loadtxt(path_toy_data, delimiter='\t', unpack=True)
     return np.vstack((xs, ys)).T, labels
+
 
 def load_data(path_data, extras=False):
     """
@@ -58,6 +60,7 @@ def load_data(path_data, extras=False):
 
     return data
 
+
 def write_predictions(path_submit_data, preds):
     if PYTHON3:
         f_data = open(path_submit_data, encoding="latin1")
@@ -68,7 +71,8 @@ def write_predictions(path_submit_data, preds):
     data = list(reader)
 
     assert len(preds) == len(data), \
-           'Expected {} predictions but {} were given.'.format(len(data), len(preds))
+        'Expected {} predictions but {} were given.'.format(
+            len(data), len(preds))
 
     for pred, datum in zip(preds.astype(int), data):
         assert pred == 1 or pred == -1, 'Invalid prediction: {}.'.format(pred)
@@ -80,11 +84,13 @@ def write_predictions(path_submit_data, preds):
     else:
         f_out = open(path_submit_data, 'wb')
 
-    writer = csv.DictWriter(f_out, delimiter='\t', fieldnames=reader.fieldnames)
+    writer = csv.DictWriter(f_out, delimiter='\t',
+                            fieldnames=reader.fieldnames)
     writer.writeheader()
     for datum in data:
         writer.writerow(datum)
     f_out.close()
+
 
 def plot_toy_data(algo_name, features, labels, thetas):
     """
@@ -112,6 +118,7 @@ def plot_toy_data(algo_name, features, labels, thetas):
     plt.suptitle('Classified Toy Data ({})'.format(algo_name))
     plt.show()
 
+
 def plot_tune_results(algo_name, param_name, param_vals, acc_train, acc_val):
     """
     Plots classification accuracy on the training and validation data versus
@@ -125,11 +132,13 @@ def plot_tune_results(algo_name, param_name, param_vals, acc_train, acc_val):
     # make the plot presentable
     algo_name = ' '.join((word.capitalize() for word in algo_name.split(' ')))
     param_name = param_name.capitalize()
-    plt.suptitle('Classification Accuracy vs {} ({})'.format(param_name, algo_name))
-    plt.legend(['train','val'], loc='upper right', title='Partition')
+    plt.suptitle('Classification Accuracy vs {} ({})'.format(
+        param_name, algo_name))
+    plt.legend(['train', 'val'], loc='upper right', title='Partition')
     plt.xlabel(param_name)
     plt.ylabel('Accuracy (%)')
     plt.show()
+
 
 def tune(train_fn, param_vals, train_feats, train_labels, val_feats, val_labels):
     train_accs = np.ndarray(len(param_vals))
@@ -146,21 +155,26 @@ def tune(train_fn, param_vals, train_feats, train_labels, val_feats, val_labels)
 
     return train_accs, val_accs
 
+
 def tune_perceptron(*args):
     return tune(p1.perceptron, *args)
 
+
 def tune_avg_perceptron(*args):
     return tune(p1.average_perceptron, *args)
+
 
 def tune_pegasos_T(best_L, *args):
     def train_fn(features, labels, T):
         return p1.pegasos(features, labels, T, best_L)
     return tune(train_fn, *args)
 
+
 def tune_pegasos_L(best_T, *args):
     def train_fn(features, labels, L):
         return p1.pegasos(features, labels, best_T, L)
     return tune(train_fn, *args)
+
 
 def most_explanatory_word(theta, wordlist):
     """Returns the word associated with the bag-of-words feature having largest weight."""
