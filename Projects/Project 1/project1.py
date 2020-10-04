@@ -92,8 +92,10 @@ def perceptron_single_step_update(
     real valued number with the value of theta_0 after the current updated has
     completed.
     """
-    # Your code here
-    raise NotImplementedError
+    if label*(np.sum(np.multiply(current_theta, feature_vector)) + current_theta_0) <= 0:
+        return current_theta + label*feature_vector, current_theta_0 + label
+    return current_theta, current_theta_0
+
 # pragma: coderesponse end
 
 
@@ -123,12 +125,18 @@ def perceptron(feature_matrix, labels, T):
     theta_0, the offset classification parameter, after T iterations through
     the feature matrix.
     """
-    # Your code here
-    for t in range(T):
+
+    # Parameters initialization
+    theta = np.zeros(feature_matrix.shape[1])
+    theta_0 = np.zeros([1])
+
+    # Perceptron Run
+    for _ in range(T):
         for i in get_order(feature_matrix.shape[0]):
-            # Your code here
-            pass
-    raise NotImplementedError
+            theta, theta_0 = perceptron_single_step_update(
+                feature_matrix[i], labels[i], theta, theta_0)
+
+    return theta, theta_0
 # pragma: coderesponse end
 
 
@@ -162,8 +170,35 @@ def average_perceptron(feature_matrix, labels, T):
     Hint: It is difficult to keep a running average; however, it is simple to
     find a sum and divide.
     """
-    # Your code here
-    raise NotImplementedError
+    # Parameters initialization
+    theta = np.zeros(feature_matrix.shape[1])
+    theta_0 = np.zeros([1])
+
+    # Initialize the records of theta
+    theta_record = np.empty(
+        [feature_matrix.shape[0]*T, feature_matrix.shape[1]])
+    theta_record_0 = np.empty(
+        [feature_matrix.shape[0]*T])
+
+    # Perceptron Run
+    counter = 0
+    for t in range(T):
+        for i in get_order(feature_matrix.shape[0]):
+            # Perceptron update
+            theta, theta_0 = perceptron_single_step_update(
+                feature_matrix[i], labels[i], theta, theta_0)
+            # Store the theta
+            theta_record[counter] = theta
+            theta_record_0[counter] = theta_0
+
+            # Updates the counter
+            counter += 1
+
+    # Perform the Average Perceptron
+    theta = np.sum(theta_record, axis=0)/(feature_matrix.shape[0]*T)
+    theta_0 = np.sum(theta_record_0, axis=0)/(feature_matrix.shape[0]*T)
+
+    return theta, theta_0
 # pragma: coderesponse end
 
 
@@ -364,3 +399,13 @@ def accuracy(preds, targets):
     """
     return (preds == targets).mean()
 # pragma: coderesponse end
+
+
+if __name__ == "__main__":
+    feature_matrix = np.array([[1, 2]])
+    labels = np.array([1])
+    T = 2
+
+    theta, theta_0 = average_perceptron(feature_matrix, labels, T)
+
+    print(theta, theta_0)
