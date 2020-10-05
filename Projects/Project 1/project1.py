@@ -309,8 +309,13 @@ def classify(feature_matrix, theta, theta_0):
     given theta and theta_0. If a prediction is GREATER THAN zero, it should
     be considered a positive classification.
     """
-    # Your code here
-    raise NotImplementedError
+
+    h = np.ones([feature_matrix.shape[0]])
+    for i, row in enumerate(feature_matrix):
+        if np.sum(np.multiply(np.transpose(theta), row)) + theta_0 <= 0:
+            h[i] = -1
+
+    return h
 # pragma: coderesponse end
 
 

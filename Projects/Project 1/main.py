@@ -38,12 +38,15 @@ test_bow_features = p1.extract_bow_feature_vectors(test_texts, dictionary)
 toy_features, toy_labels = toy_data = utils.load_toy_data(
     os.path.join(pathlib.Path(__file__).parent.absolute(), 'toy_data.tsv'))
 
-T = 10
+T = 10000
 L = 0.2
 
 thetas_perceptron = p1.perceptron(toy_features, toy_labels, T)
 thetas_avg_perceptron = p1.average_perceptron(toy_features, toy_labels, T)
 thetas_pegasos = p1.pegasos(toy_features, toy_labels, T, L)
+
+
+print(f'T: {T}')
 
 
 def plot_toy_results(algo_name, thetas):
