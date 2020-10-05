@@ -273,7 +273,7 @@ def pegasos(feature_matrix, labels, T, L):
 
     # Pegasos Run
     counter = 1
-    for t in range(T):
+    for _ in range(T):
         for i in get_order(feature_matrix.shape[0]):
             # Decaying leearning rate
             eta = 1/np.sqrt(counter)
@@ -352,8 +352,19 @@ def classifier_accuracy(
     trained classifier on the training data and the second element is the
     accuracy of the trained classifier on the validation data.
     """
-    # Your code here
-    raise NotImplementedError
+
+    # Trains the linear classifier
+    theta, theta_0 = classifier(train_feature_matrix, train_labels, **kwargs)
+
+    # Classify the training and validation data set
+    train_h = classify(train_feature_matrix, theta, theta_0)
+    val_h = classify(val_feature_matrix, theta, theta_0)
+
+    # Calculates the accuracy on training and validation data set
+    accuracy_train = accuracy(train_h, train_labels)
+    accuracy_val = accuracy(val_h, val_labels)
+
+    return accuracy_train, accuracy_val
 # pragma: coderesponse end
 
 
@@ -427,10 +438,4 @@ def accuracy(preds, targets):
 
 
 if __name__ == "__main__":
-    feature_matrix = np.array([[1, 2]])
-    labels = np.array([1])
-    T = 2
-
-    theta, theta_0 = average_perceptron(feature_matrix, labels, T)
-
-    print(theta, theta_0)
+    pass
