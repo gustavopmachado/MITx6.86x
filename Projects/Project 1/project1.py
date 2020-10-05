@@ -418,7 +418,7 @@ def extract_bow_feature_vectors(reviews, dictionary):
         word_list = extract_words(text)
         for word in word_list:
             if word in dictionary:
-                feature_matrix[i, dictionary[word]] = 1
+                feature_matrix[i, dictionary[word]] = word_list.count(word)
     return feature_matrix
 # pragma: coderesponse end
 
