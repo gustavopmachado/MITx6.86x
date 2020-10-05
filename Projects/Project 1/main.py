@@ -26,7 +26,12 @@ val_texts, val_labels = zip(
 test_texts, test_labels = zip(
     *((sample['text'], sample['sentiment']) for sample in test_data))
 
-dictionary = p1.bag_of_words(train_texts)
+# Load the stop words
+with open(os.path.join(pathlib.Path(__file__).parent.absolute(), "stopwords.txt"), "r") as f:
+    stop_words_read = f.readlines()
+stop_words = [word.strip() for word in stop_words_read]
+
+dictionary = p1.bag_of_words(train_texts, stop_words)
 
 train_bow_features = p1.extract_bow_feature_vectors(train_texts, dictionary)
 val_bow_features = p1.extract_bow_feature_vectors(val_texts, dictionary)

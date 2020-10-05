@@ -380,7 +380,7 @@ def extract_words(input_string):
 
 
 # pragma: coderesponse template
-def bag_of_words(texts):
+def bag_of_words(texts, *args):
     """
     Inputs a list of string reviews
     Returns a dictionary of unique unigrams occurring over the input
@@ -392,7 +392,7 @@ def bag_of_words(texts):
     for text in texts:
         word_list = extract_words(text)
         for word in word_list:
-            if word not in dictionary:
+            if word not in dictionary and word not in args[0]:
                 dictionary[word] = len(dictionary)
     return dictionary
 # pragma: coderesponse end
