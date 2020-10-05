@@ -175,28 +175,24 @@ def average_perceptron(feature_matrix, labels, T):
     theta_0 = np.zeros([1])
 
     # Initialize the records of theta
-    theta_record = np.empty(
-        [feature_matrix.shape[0]*T, feature_matrix.shape[1]])
-    theta_record_0 = np.empty(
-        [feature_matrix.shape[0]*T])
+    # The results won't be stored in order to optimize the memory allocation
+    theta_record = theta
+    theta_record_0 = theta_0
 
     # Perceptron Run
-    counter = 0
     for _ in range(T):
         for i in get_order(feature_matrix.shape[0]):
             # Perceptron update
             theta, theta_0 = perceptron_single_step_update(
                 feature_matrix[i], labels[i], theta, theta_0)
-            # Store the theta
-            theta_record[counter] = theta
-            theta_record_0[counter] = theta_0
 
-            # Updates the counter
-            counter += 1
+            #
+            theta_record += theta
+            theta_record_0 += theta_0
 
     # Perform the Average Perceptron
-    theta = np.sum(theta_record, axis=0)/(feature_matrix.shape[0]*T)
-    theta_0 = np.sum(theta_record_0, axis=0)/(feature_matrix.shape[0]*T)
+    theta = theta_record/(feature_matrix.shape[0]*T)
+    theta_0 = theta_record_0/(feature_matrix.shape[0]*T)
 
     return theta, theta_0
 # pragma: coderesponse end
