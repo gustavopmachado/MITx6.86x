@@ -13,10 +13,10 @@ from kernel import *
 # 1. Introduction
 #######################################################################
 
-# Load MNIST data:
-train_x, train_y, test_x, test_y = get_MNIST_data()
-# Plot the first 20 images of the training set.
-plot_images(train_x[0:20, :])
+# # Load MNIST data:
+# train_x, train_y, test_x, test_y = get_MNIST_data()
+# # Plot the first 20 images of the training set.
+# plot_images(train_x[0:20, :])
 
 #######################################################################
 # 2. Linear Regression with Closed Form Solution
@@ -41,8 +41,9 @@ def run_linear_regression_on_MNIST(lambda_factor=1):
 
 
 # Don't run this until the relevant functions in linear_regression.py have been fully implemented.
-print('Linear Regression test_error =', run_linear_regression_on_MNIST(lambda_factor=1))
-
+print('Linear Regression test_error (Lambda = 1):', run_linear_regression_on_MNIST(lambda_factor=1))
+print('Linear Regression test_error (Lambda = 0.1):', run_linear_regression_on_MNIST(lambda_factor=0.1))
+print('Linear Regression test_error (Lambda = 0.01):', run_linear_regression_on_MNIST(lambda_factor=0.01))
 
 #######################################################################
 # 3. Support Vector Machine
@@ -191,8 +192,8 @@ plot_images(train_x[1, ])
 
 # TODO: First fill out cubicFeatures() function in features.py as the below code requires it.
 
-train_cube = cubic_features(train_pca10)
-test_cube = cubic_features(test_pca10)
+# train_cube = cubic_features(train_pca10)
+# test_cube = cubic_features(test_pca10)
 # train_cube (and test_cube) is a representation of our training (and test) data
 # after applying the cubic kernel feature mapping to the 10-dimensional PCA representations.
 
