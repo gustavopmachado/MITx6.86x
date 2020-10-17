@@ -37,8 +37,19 @@ def multi_class_svm(train_x, train_y, test_x):
         test_x - (m, d) NumPy array (m datapoints each with d features)
     Returns:
         pred_test_y - (m,) NumPy array containing the labels (int) for each test data point
+    
+    Reference: https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC
+    
+    Obs.: The LinearSVC is robust enough to use the multi-class SVM when the input labels are multi-class
     """
-    raise NotImplementedError
+    # Initialize the 'One-vs-Rest' LinearSVC class considering the hinge loss formulation
+    svc = LinearSVC(C=0.1, random_state=0)
+
+    # Trains the LinearSVC Class
+    svc.fit(train_x, train_y)
+
+    # Prediction
+    return svc.predict(test_x)
 
 
 def compute_test_error_svm(test_y, pred_test_y):
