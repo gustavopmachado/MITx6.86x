@@ -69,7 +69,7 @@ def get_MNIST_data():
 
     """
     train_set, valid_set, test_set = read_pickle_data(os.path.join(
-        Path(__file__).parent, 'Datasets', 'mnist.pkl.gz'))
+        Path(__file__).parent.parent, 'Datasets', 'mnist.pkl.gz'))
     train_x, train_y = train_set
     valid_x, valid_y = valid_set
     train_x = np.vstack((train_x, valid_x))
