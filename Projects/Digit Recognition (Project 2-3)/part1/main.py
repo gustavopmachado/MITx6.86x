@@ -41,9 +41,9 @@ def run_linear_regression_on_MNIST(lambda_factor=1):
 
 
 # Don't run this until the relevant functions in linear_regression.py have been fully implemented.
-print('Linear Regression test_error (Lambda = 1):', run_linear_regression_on_MNIST(lambda_factor=1))
-print('Linear Regression test_error (Lambda = 0.1):', run_linear_regression_on_MNIST(lambda_factor=0.1))
-print('Linear Regression test_error (Lambda = 0.01):', run_linear_regression_on_MNIST(lambda_factor=0.01))
+# print('Linear Regression test_error (Lambda = 1):', run_linear_regression_on_MNIST(lambda_factor=1))
+# print('Linear Regression test_error (Lambda = 0.1):', run_linear_regression_on_MNIST(lambda_factor=0.1))
+# print('Linear Regression test_error (Lambda = 0.01):', run_linear_regression_on_MNIST(lambda_factor=0.01))
 
 #######################################################################
 # 3. Support Vector Machine
@@ -51,7 +51,7 @@ print('Linear Regression test_error (Lambda = 0.01):', run_linear_regression_on_
 
 # TODO: first fill out functions in svm.py, or the functions below will not work
 
-def run_svm_one_vs_rest_on_MNIST():
+def run_svm_one_vs_rest_on_MNIST(C):
     """
     Trains svm, classifies test data, computes test error on test set
 
@@ -61,12 +61,23 @@ def run_svm_one_vs_rest_on_MNIST():
     train_x, train_y, test_x, test_y = get_MNIST_data()
     train_y[train_y != 0] = 1
     test_y[test_y != 0] = 1
-    pred_test_y = one_vs_rest_svm(train_x, train_y, test_x)
+    pred_test_y = one_vs_rest_svm(train_x, train_y, test_x, C)
     test_error = compute_test_error_svm(test_y, pred_test_y)
     return test_error
 
+# Evaluate the effect of C in the LinearSVC 
+C = np.array([0.001, 0.01, 0.1])
+test_error = np.zeros(C.shape)
+for i, c in enumerate(C):
+    test_error[i] = run_svm_one_vs_rest_on_MNIST(c)
+    print(f'One vs. Rest SVM Test Error (C = {c}):', run_svm_one_vs_rest_on_MNIST(c))
 
-print('SVM one vs. rest test_error:', run_svm_one_vs_rest_on_MNIST())
+# Plot the Test Error
+plt.plot(C, 100*test_error)
+plt.title('Test Error')
+plt.xlabel('C')
+plt.ylabel('Test Error (%)')
+plt.show()
 
 
 def run_multiclass_svm_on_MNIST():
