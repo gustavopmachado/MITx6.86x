@@ -4,7 +4,7 @@ from sklearn.svm import LinearSVC
 
 ### Functions for you to fill in ###
 
-def one_vs_rest_svm(train_x, train_y, test_x):
+def one_vs_rest_svm(train_x, train_y, test_x, C):
     """
     Trains a linear SVM for binary classifciation
 
@@ -18,7 +18,7 @@ def one_vs_rest_svm(train_x, train_y, test_x):
     Reference: https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html#sklearn.svm.LinearSVC
     """
     # Initialize the 'One-vs-Rest' LinearSVC class considering the hinge loss formulation
-    svc = LinearSVC(C=0.1, random_state=0)
+    svc = LinearSVC(C=C, random_state=0)
 
     # Trains the LinearSVC Class
     svc.fit(train_x, train_y)
