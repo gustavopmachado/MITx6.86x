@@ -25,7 +25,6 @@ def closed_form(X, Y, lambda_factor):
             2. Inverting the matrix is very slow with high dimensional features. np.dot(np.dot(np.transpose(X), X) + lambda_factor*np.identity(X.shape[1]))
                is an (d + 1) by (d + 1) matrix where (d + 1) is the number of feature. Time complexity for inverting the matrix is O((d + 1)^3).
     """
-    # YOUR CODE HERE
 
     # Check if np.dot(np.dot(np.transpose(X), X) + lambda_factor*np.identity(X.shape[1])) is invertible
     if np.linalg.det(np.dot(np.transpose(X), X) + lambda_factor*np.identity(X.shape[1])) != 0:
