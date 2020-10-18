@@ -1,7 +1,7 @@
 import scipy.sparse as sparse
 import matplotlib.pyplot as plt
 import numpy as np
-from utils import *
+# from utils import *
 import utils
 import sys
 sys.path.append("..")
@@ -34,7 +34,7 @@ def compute_probabilities(X, theta, temp_parameter):
     """
 
     # Defines the precision for floats
-    PRECISION = 1e-8
+    PRECISION = 1e-6
 
     # To reduce the computacional cost this calculation is saved since it's used further to avoid numerical overflow
     calc = np.inner(theta, X)/temp_parameter
@@ -100,8 +100,22 @@ def run_gradient_descent_iteration(X, Y, theta, alpha, lambda_factor, temp_param
     Returns:
         theta - (k, d) NumPy array that is the final value of parameters theta
     """
-    # YOUR CODE HERE
-    raise NotImplementedError
+
+    # Compute Probabilities that X[i] is labeled as j
+    prob = compute_probabilities(X, theta, temp_parameter)
+
+    # Indicator Matrix: [[y(i) == m]]
+    indicator_matrix = sparse.coo_matrix((np.ones(X.shape[0]), (Y, np.arange(
+        Y.shape[0]))), shape=(theta.shape[0], Y.shape[0])).toarray()
+
+    # Inner summation of J's gradient
+    gradient = np.zeros(theta.shape)
+    for i in range(X.shape[0]):
+        gradient += np.multiply(np.tile(X[i], (theta.shape[0], 1)),
+                                (indicator_matrix - prob).T[i].reshape(theta.shape[0], 1))
+
+    # Gradient Descent Update
+    return theta - alpha*(-gradient/(temp_parameter*X.shape[0]) + lambda_factor*theta)
 
 
 def update_y(train_y, test_y):
@@ -168,7 +182,7 @@ def softmax_regression(X, Y, temp_parameter, alpha, lambda_factor, k, num_iterat
     X = augment_feature_vector(X)
     theta = np.zeros([k, X.shape[1]])
     cost_function_progression = []
-    for i in range(num_iterations):
+    for _ in range(num_iterations):
         cost_function_progression.append(compute_cost_function(
             X, Y, theta, lambda_factor, temp_parameter))
         theta = run_gradient_descent_iteration(
@@ -203,6 +217,6 @@ def plot_cost_function_over_time(cost_function_history):
 
 
 def compute_test_error(X, Y, theta, temp_parameter):
-    error_count = 0.
+    # error_count = 0.
     assigned_labels = get_classification(X, theta, temp_parameter)
     return 1 - np.mean(assigned_labels == Y)
