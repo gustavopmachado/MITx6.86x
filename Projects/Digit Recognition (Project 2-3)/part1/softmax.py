@@ -70,11 +70,12 @@ def compute_cost_function(X, Y, theta, lambda_factor, temp_parameter):
     prob = compute_probabilities(X, theta, temp_parameter)
 
     # Conditional Matrix: To avoid problems with log(0), this matrix was proposed to
-    conditional = sparse.coo_matrix((np.ones(X.shape[0]), (Y, np.arange(
+    conditional = sparse.coo_matrix((np.ones(X.shape[0], dtype=int), (Y, np.arange(
         Y.shape[0]))), shape=(theta.shape[0], Y.shape[0])).toarray()
 
     # Probability Cost
-    probability = -np.sum(np.where(conditional, np.log(prob), 0))/X.shape[0]
+    probability = -np.sum(np.log(np.multiply(prob, conditional),
+                                 where=(np.multiply(prob, conditional)) != 0))/X.shape[0]
 
     # Regularization term
     regularization = 0.5*lambda_factor*np.sum(np.multiply(theta, theta))
@@ -122,10 +123,7 @@ def run_gradient_descent_iteration(X, Y, theta, alpha, lambda_factor, temp_param
         Y.shape[0]))), shape=(theta.shape[0], Y.shape[0])).toarray()
 
     # Inner summation of J's gradient
-    gradient = np.zeros(theta.shape)
-    for i in range(X.shape[0]):
-        gradient += np.multiply(np.tile(X[i], (theta.shape[0], 1)),
-                                (indicator_matrix - prob).T[i].reshape(theta.shape[0], 1))
+    gradient = np.dot(indicator_matrix - prob, X)
 
     # Gradient Descent Update
     return theta - alpha*(-gradient/(temp_parameter*X.shape[0]) + lambda_factor*theta)
