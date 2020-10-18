@@ -13,8 +13,8 @@ sys.path.append("..")
 # 1. Introduction
 #######################################################################
 
-# # Load MNIST data:
-# train_x, train_y, test_x, test_y = get_MNIST_data()
+# Load MNIST data:
+train_x, train_y, test_x, test_y = get_MNIST_data()
 # # Plot the first 20 images of the training set.
 # plot_images(train_x[0:20, :])
 
@@ -141,8 +141,8 @@ def run_softmax_on_MNIST(temp_parameter=1):
 
 # print('\n', 'Softmax Regression Test Error (T = 0.5):',
 #       run_softmax_on_MNIST(temp_parameter=0.5))
-print('\n', 'Softmax Regression Test Error (T = 1):',
-      run_softmax_on_MNIST(temp_parameter=1))
+# print('\n', 'Softmax Regression Test Error (T = 1):',
+#       run_softmax_on_MNIST(temp_parameter=1))
 # print('\n', 'Softmax Regression Test Error (T = 2):',
 #       run_softmax_on_MNIST(temp_parameter=2))
 
@@ -178,8 +178,8 @@ def run_softmax_on_MNIST_mod3(temp_parameter=1):
 
 
 # TODO: Run run_softmax_on_MNIST_mod3(), report the error rate
-print('\n', 'Softmax Regression [Trained on Mod 3] Test Error (T = 1):',
-      run_softmax_on_MNIST_mod3(temp_parameter=1))
+# print('\n', 'Softmax Regression [Trained on Mod 3] Test Error (T = 1):',
+#       run_softmax_on_MNIST_mod3(temp_parameter=1))
 
 #######################################################################
 # 7. Classification Using Manually Crafted Features
@@ -204,7 +204,16 @@ test_pca = project_onto_PC(test_x, pcs, n_components, feature_means)
 
 # TODO: Train your softmax regression model using (train_pca, train_y)
 #       and evaluate its accuracy on (test_pca, test_y).
+# Retrains the Softmax Regression with PCA
+temp_parameter = 1
+theta_pca, _ = softmax_regression(
+    train_pca, train_y, temp_parameter, alpha=0.3, lambda_factor=1.0e-4, k=10, num_iterations=150)
+# Evaluates the PCA trained model
+test_error_pca = compute_test_error(
+    test_pca, test_y, theta_pca, temp_parameter)
 
+print('\n', 'Softmax Regression [PCA] Test Error (T = 1):',
+      test_error_pca)
 
 # TODO: Use the plot_PC function in features.py to produce scatterplot
 #       of the first 100 MNIST images, as represented in the space spanned by the
