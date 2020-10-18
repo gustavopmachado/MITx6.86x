@@ -1,13 +1,13 @@
+from kernel import *
+from features import *
+from softmax import *
+from svm import *
+from linear_regression import *
+from utils import *
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
 sys.path.append("..")
-from utils import *
-from linear_regression import *
-from svm import *
-from softmax import *
-from features import *
-from kernel import *
 
 #######################################################################
 # 1. Introduction
@@ -65,19 +65,19 @@ def run_svm_one_vs_rest_on_MNIST(C):
     test_error = compute_test_error_svm(test_y, pred_test_y)
     return test_error
 
-# Evaluate the effect of C in the LinearSVC 
-C = np.array([0.001, 0.01, 0.1])
-test_error = np.zeros(C.shape)
-for i, c in enumerate(C):
-    test_error[i] = run_svm_one_vs_rest_on_MNIST(c)
-    print(f'One vs. Rest SVM Test Error (C = {c}):', run_svm_one_vs_rest_on_MNIST(c))
+# # Evaluate the effect of C in the LinearSVC
+# C = np.array([0.001, 0.01, 0.1])
+# test_error = np.zeros(C.shape)
+# for i, c in enumerate(C):
+#     test_error[i] = run_svm_one_vs_rest_on_MNIST(c)
+#     print(f'One vs. Rest SVM Test Error (C = {c}):', run_svm_one_vs_rest_on_MNIST(c))
 
-# Plot the Test Error
-plt.plot(C, 100*test_error)
-plt.title('Test Error')
-plt.xlabel('C')
-plt.ylabel('Test Error (%)')
-plt.show()
+# # Plot the Test Error
+# plt.plot(C, 100*test_error)
+# plt.title('Test Error')
+# plt.xlabel('C')
+# plt.ylabel('Test Error (%)')
+# plt.show()
 
 
 def run_multiclass_svm_on_MNIST():
@@ -92,8 +92,7 @@ def run_multiclass_svm_on_MNIST():
     test_error = compute_test_error_svm(test_y, pred_test_y)
     return test_error
 
-
-print('Multiclass SVM test_error:', run_multiclass_svm_on_MNIST())
+# print('Multiclass SVM Test Error (C = 0.1):', run_multiclass_svm_on_MNIST())
 
 #######################################################################
 # 4. Multinomial (Softmax) Regression and Gradient Descent
@@ -118,18 +117,34 @@ def run_softmax_on_MNIST(temp_parameter=1):
         Final test error
     """
     train_x, train_y, test_x, test_y = get_MNIST_data()
-    theta, cost_function_history = softmax_regression(train_x, train_y, temp_parameter, alpha=0.3, lambda_factor=1.0e-4, k=10, num_iterations=150)
+
+    theta, cost_function_history = softmax_regression(
+        train_x, train_y, temp_parameter, alpha=0.3, lambda_factor=1.0e-4, k=10, num_iterations=150)
+
     plot_cost_function_over_time(cost_function_history)
+
     test_error = compute_test_error(test_x, test_y, theta, temp_parameter)
+
     # Save the model parameters theta obtained from calling softmax_regression to disk.
     write_pickle_data(theta, "./theta.pkl.gz")
 
     # TODO: add your code here for the "Using the Current Model" question in tab 4.
     #      and print the test_error_mod3
+    _, test_y_mod3 = update_y(train_y, test_y)
+    test_error_mod3 = compute_test_error_mod3(
+        test_x, test_y_mod3, theta, temp_parameter)
+    print(
+        '\n', 'Softmax Regression [Predictions Mod 3] Test Error (T = 1):', test_error_mod3)
+
     return test_error
 
 
-print('softmax test_error=', run_softmax_on_MNIST(temp_parameter=1))
+# print('\n', 'Softmax Regression Test Error (T = 0.5):',
+#       run_softmax_on_MNIST(temp_parameter=0.5))
+print('\n', 'Softmax Regression Test Error (T = 1):',
+      run_softmax_on_MNIST(temp_parameter=1))
+# print('\n', 'Softmax Regression Test Error (T = 2):',
+#       run_softmax_on_MNIST(temp_parameter=2))
 
 # TODO: Find the error rate for temp_parameter = [.5, 1.0, 2.0]
 #      Remember to return the tempParameter to 1, and re-run run_softmax_on_MNIST
@@ -139,19 +154,32 @@ print('softmax test_error=', run_softmax_on_MNIST(temp_parameter=1))
 #######################################################################
 
 
-
 def run_softmax_on_MNIST_mod3(temp_parameter=1):
     """
     Trains Softmax regression on digit (mod 3) classifications.
 
     See run_softmax_on_MNIST for more info.
     """
-    # YOUR CODE HERE
-    raise NotImplementedError
+    train_x, train_y, test_x, test_y = get_MNIST_data()
+
+    train_y_mod3, test_y_mod3 = update_y(train_y, test_y)
+
+    theta, cost_function_history = softmax_regression(
+        train_x, train_y_mod3, temp_parameter, alpha=0.3, lambda_factor=1.0e-4, k=10, num_iterations=150)
+
+    plot_cost_function_over_time(cost_function_history)
+
+    test_error = compute_test_error(test_x, test_y_mod3, theta, temp_parameter)
+
+    # Save the model parameters theta obtained from calling softmax_regression to disk.
+    write_pickle_data(theta, "./theta_mod3.pkl.gz")
+
+    return test_error
 
 
 # TODO: Run run_softmax_on_MNIST_mod3(), report the error rate
-
+print('\n', 'Softmax Regression [Trained on Mod 3] Test Error (T = 1):',
+      run_softmax_on_MNIST_mod3(temp_parameter=1))
 
 #######################################################################
 # 7. Classification Using Manually Crafted Features
@@ -164,7 +192,7 @@ def run_softmax_on_MNIST_mod3(temp_parameter=1):
 
 n_components = 18
 
-###Correction note:  the following 4 lines have been modified since release.
+# Correction note:  the following 4 lines have been modified since release.
 train_x_centered, feature_means = center_data(train_x)
 pcs = principal_components(train_x_centered)
 train_pca = project_onto_PC(train_x, pcs, n_components, feature_means)
@@ -181,18 +209,21 @@ test_pca = project_onto_PC(test_x, pcs, n_components, feature_means)
 # TODO: Use the plot_PC function in features.py to produce scatterplot
 #       of the first 100 MNIST images, as represented in the space spanned by the
 #       first 2 principal components found above.
-plot_PC(train_x[range(000, 100), ], pcs, train_y[range(000, 100)], feature_means)#feature_means added since release
+plot_PC(train_x[range(000, 100), ], pcs, train_y[range(000, 100)],
+        feature_means)  # feature_means added since release
 
 
 # TODO: Use the reconstruct_PC function in features.py to show
 #       the first and second MNIST images as reconstructed solely from
 #       their 18-dimensional principal component representation.
 #       Compare the reconstructed images with the originals.
-firstimage_reconstructed = reconstruct_PC(train_pca[0, ], pcs, n_components, train_x, feature_means)#feature_means added since release
+firstimage_reconstructed = reconstruct_PC(
+    train_pca[0, ], pcs, n_components, train_x, feature_means)  # feature_means added since release
 plot_images(firstimage_reconstructed)
 plot_images(train_x[0, ])
 
-secondimage_reconstructed = reconstruct_PC(train_pca[1, ], pcs, n_components, train_x, feature_means)#feature_means added since release
+secondimage_reconstructed = reconstruct_PC(
+    train_pca[1, ], pcs, n_components, train_x, feature_means)  # feature_means added since release
 plot_images(secondimage_reconstructed)
 plot_images(train_x[1, ])
 
