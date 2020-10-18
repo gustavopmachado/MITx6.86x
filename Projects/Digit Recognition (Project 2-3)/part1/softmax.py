@@ -31,8 +31,21 @@ def compute_probabilities(X, theta, temp_parameter):
     Returns:
         H - (k, n) NumPy array, where each entry H[j][i] is the probability that X[i] is labeled as j
     """
-    #YOUR CODE HERE
-    raise NotImplementedError
+
+    # Defines the precision for floats
+    PRECISION = 1e-8
+
+    # To reduce the computacional cost this calculation is saved since it's used further to avoid numerical overflow
+    calc = np.inner(theta, X)/temp_parameter
+
+    # To avoid numerical overflow, c is introduced without changing the probabilities calculation
+    c = np.tile(np.max(calc, axis=0), (calc.shape[0], 1))
+
+    # Fixing floating precision due to expenentiation
+    exp_calc = np.where(np.isclose(np.exp(calc - c), PRECISION), 0, np.exp(calc - c))
+
+    #  Calculates H 
+    return (1/np.sum(exp_calc, axis=0))*exp_calc
 
 def compute_cost_function(X, Y, theta, lambda_factor, temp_parameter):
     """
