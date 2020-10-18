@@ -116,14 +116,14 @@ def run_gradient_descent_iteration(X, Y, theta, alpha, lambda_factor, temp_param
     """
 
     # Compute Probabilities that X[i] is labeled as j
-    prob = compute_probabilities(X, theta, temp_parameter)
+    probabilities = compute_probabilities(X, theta, temp_parameter)
 
     # Indicator Matrix: [[y(i) == m]]
     indicator_matrix = sparse.coo_matrix((np.ones(X.shape[0]), (Y, np.arange(
         Y.shape[0]))), shape=(theta.shape[0], Y.shape[0])).toarray()
 
     # Inner summation of J's gradient
-    gradient = np.dot(indicator_matrix - prob, X)
+    gradient = np.dot(indicator_matrix - probabilities, X)
 
     # Gradient Descent Update
     return theta - alpha*(-gradient/(temp_parameter*X.shape[0]) + lambda_factor*theta)
@@ -146,8 +146,7 @@ def update_y(train_y, test_y):
         test_y_mod3 - (n, ) NumPy array containing the new labels (a number between 0-2)
                     for each datapoint in the test set
     """
-    # YOUR CODE HERE
-    raise NotImplementedError
+    return np.mod(train_y, 3), np.mod(test_y, 3)
 
 
 def compute_test_error_mod3(X, Y, theta, temp_parameter):
@@ -165,8 +164,8 @@ def compute_test_error_mod3(X, Y, theta, temp_parameter):
     Returns:
         test_error - the error rate of the classifier (scalar)
     """
-    # YOUR CODE HERE
-    raise NotImplementedError
+    assigned_labels = get_classification(X, theta, temp_parameter)
+    return 1 - np.mean(np.mod(assigned_labels, 3) == Y)
 
 
 def softmax_regression(X, Y, temp_parameter, alpha, lambda_factor, k, num_iterations):
