@@ -119,7 +119,7 @@ def check_list(ex_name, f, exp_res, *args):
 
 def check_get_mnist():
     ex_name = "Get MNIST data"
-    train_x, train_y, test_x, test_y = utils.get_MNIST_data()
+    _, _, _, _ = utils.get_MNIST_data()
     log(green("PASS"), ex_name, "")
 
 
