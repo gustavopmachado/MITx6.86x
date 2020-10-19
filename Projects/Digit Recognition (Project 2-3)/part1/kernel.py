@@ -35,5 +35,10 @@ def rbf_kernel(X, Y, gamma):
         Returns:
             kernel_matrix - (n, m) Numpy array containing the kernel matrix
     """
-    # YOUR CODE HERE
-    raise NotImplementedError
+    # TODO: Work on the pairwise distance
+    # dist = (X.reshape((X.shape[0], X.shape[1], 1)) - Y.transpose()).sum(axis=1)
+
+    # L2 Vectorized distance between matrices
+    dist = -2 * np.dot(X, Y.transpose()) + np.sum(Y**2,
+                                                  axis=1) + np.sum(X**2, axis=1)[:, np.newaxis]
+    return np.exp(-gamma*dist)
