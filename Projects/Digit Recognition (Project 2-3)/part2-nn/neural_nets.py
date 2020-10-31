@@ -99,17 +99,21 @@ class NeuralNetwork():
         input_values = np.matrix([[x1], [x2]])
 
         # Compute output for a single input(should be same as the forward propagation in training)
-        # hidden_layer_weighted_input =  # TODO
-        # hidden_layer_activation =  # TODO
-        # output =  # TODO
-        # activated_output =  # TODO
+        hidden_layer_weighted_input = np.dot(
+            self.input_to_hidden_weights, input_values) + self.biases
+        hidden_layer_activation = np.vectorize(
+            rectified_linear_unit)(hidden_layer_weighted_input)
+
+        output = np.dot(self.hidden_to_output_weights, hidden_layer_activation)
+        activated_output = np.vectorize(
+            output_layer_activation)(output)
 
         return activated_output.item()
 
     # Run this to train your neural network once you complete the train method
     def train_neural_network(self):
 
-        for epoch in range(self.epochs_to_train):
+        for _ in range(self.epochs_to_train):
             for x, y in self.training_points:
                 self.train(x[0], x[1], y)
 
@@ -127,12 +131,11 @@ class NeuralNetwork():
                 return
 
 
+# Defines a Forward Neural Network
 x = NeuralNetwork()
 
+# Trains the Neural Network
 x.train_neural_network()
 
-print(x.input_to_hidden_weights)
-print(x.hidden_to_output_weights)
-
 # UNCOMMENT THE LINE BELOW TO TEST YOUR NEURAL NETWORK
-# x.test_neural_network()
+x.test_neural_network()
