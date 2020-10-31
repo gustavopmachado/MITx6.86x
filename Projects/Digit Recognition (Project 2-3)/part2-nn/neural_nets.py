@@ -15,11 +15,11 @@ import math
 
 def rectified_linear_unit(x):
     """ Returns the ReLU of x, or the maximum between 0 and x."""
-    # TODO
+    return np.maximum(0, x)
 
 def rectified_linear_unit_derivative(x):
     """ Returns the derivative of ReLU."""
-    # TODO
+    return np.where(x <= 0, 0, 1)
 
 def output_layer_activation(x):
     """ Linear function, returns input as is. """
