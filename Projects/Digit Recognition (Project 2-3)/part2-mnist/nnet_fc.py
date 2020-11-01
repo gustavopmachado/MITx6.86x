@@ -1,6 +1,10 @@
-#! /usr/bin/env python
+# ! /usr/bin/env python
 
-import _pickle as cPickle, gzip
+from utils import *
+from train_utils import batchify_data, run_epoch, train_model
+import utils
+import _pickle as cPickle
+import gzip
 import numpy as np
 from tqdm import tqdm
 import torch
@@ -9,9 +13,7 @@ import torch.nn.functional as F
 import torch.nn as nn
 import sys
 sys.path.append("..")
-import utils
-from utils import *
-from train_utils import batchify_data, run_epoch, train_model
+
 
 def main():
     # Load the dataset
@@ -37,22 +39,23 @@ def main():
     test_batches = batchify_data(X_test, y_test, batch_size)
 
     #################################
-    ## Model specification TODO
+    # Model specification TODO
     model = nn.Sequential(
-              nn.Linear(784, 10),
-              nn.ReLU(),
-              nn.Linear(10, 10),
-            )
-    lr=0.1
-    momentum=0
+        nn.Linear(784, 10),
+        nn.ReLU(),
+        nn.Linear(10, 10),
+    )
+    lr = 0.1
+    momentum = 0
     ##################################
 
     train_model(train_batches, dev_batches, model, lr=lr, momentum=momentum)
 
-    ## Evaluate the model on test data
+    # Evaluate the model on test data
     loss, accuracy = run_epoch(test_batches, model.eval(), None)
 
-    print ("Loss on test set:"  + str(loss) + " Accuracy on test set: " + str(accuracy))
+    print("Loss on test set:" + str(loss) +
+          " Accuracy on test set: " + str(accuracy))
 
 
 if __name__ == '__main__':
