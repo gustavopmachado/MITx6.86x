@@ -1,6 +1,10 @@
 #! /usr/bin/env python
 
-import _pickle as c_pickle, gzip
+from train_utils import batchify_data, run_epoch, train_model, Flatten
+from utils import *
+import utils
+import _pickle as c_pickle
+import gzip
 import numpy as np
 from tqdm import tqdm
 import torch
@@ -9,9 +13,7 @@ import torch.nn.functional as F
 import torch.nn as nn
 import sys
 sys.path.append("..")
-import utils
-from utils import *
-from train_utils import batchify_data, run_epoch, train_model, Flatten
+
 
 def main():
     # Load the dataset
@@ -41,20 +43,33 @@ def main():
     test_batches = batchify_data(X_test, y_test, batch_size)
 
     #################################
-    ## Model specification TODO
+    # Model specification TODO
     model = nn.Sequential(
-              nn.Conv2d(1, 32, (3, 3)),
-              nn.ReLU(),
-              nn.MaxPool2d((2, 2)),
-            )
+        # Valid Convolution with 3x3 Kernel: 28x28 -> 26x26
+        nn.Conv2d(1, 32, (3, 3)),
+        nn.ReLU(),
+        # Pooling with 2x2 Kernel: 26x26 -> 13x13
+        nn.MaxPool2d((2, 2)),
+        # Valid Convolution with 3x3 Kernel: 13x13 -> 11x11
+        nn.Conv2d(32, 64, (3, 3)),
+        nn.ReLU(),
+        # Pooling with 2x2 Kernel: 11x11 to 5x5
+        nn.MaxPool2d((2, 2)),
+        Flatten(),
+        # Flattening: 5x5x64 -> 1600
+        nn.Linear(1600, 128),
+        nn.Dropout(),
+        nn.Linear(128, 10)
+    )
     ##################################
 
     train_model(train_batches, dev_batches, model, nesterov=True)
 
-    ## Evaluate the model on test data
+    # Evaluate the model on test data
     loss, accuracy = run_epoch(test_batches, model.eval(), None)
 
-    print ("Loss on test set:"  + str(loss) + " Accuracy on test set: " + str(accuracy))
+    print("Loss on test set:" + str(loss) +
+          " Accuracy on test set: " + str(accuracy))
 
 
 if __name__ == '__main__':
