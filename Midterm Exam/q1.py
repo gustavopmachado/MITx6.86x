@@ -2,6 +2,7 @@ import numpy as np
 
 # It's possible, given the mistakes of each training data, to calculate the parameters when using Linear Perceptron Algorithm as follows:
 #
+# [Writen in LaTeX]
 # \theta := theta_{initial} + \sum_{i=1}^{n} \beta^{i}y^{i}x^{i}
 # \theta_{0} := theta_{0, initial} + \sum_{i=1}^{n} \beta^{i}y^{i}
 #
