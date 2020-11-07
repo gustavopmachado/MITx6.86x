@@ -87,6 +87,7 @@ def perceptron(x, y, theta=None, theta_not=None, **kwargs):
 
     # Initiliaze the list to store the parameters progress
     theta_prog = np.array(theta)
+    theta_not_prog = np.array(theta_not)
 
     # Initialize the dictionary to store each point update history
     update_history = dict(
@@ -99,9 +100,10 @@ def perceptron(x, y, theta=None, theta_not=None, **kwargs):
         for i in order:
             theta, theta_not = perceptron_step(theta, theta_not, x[i], y[i])
 
-            if any(theta != theta_prog[-1]):
+            if any(theta != theta_prog[-1]) or any(theta_not != theta_not_prog[-1]):
                 # Append the new theta in order to track its progress
                 theta_prog = np.vstack((theta_prog, theta))
+                theta_not_prog = np.vstack((theta_not_prog, theta_not))
 
                 # Updates the training point history
                 update_history[f"x{i + 1}"] = update_history.get(
